@@ -92,13 +92,6 @@ def analyze_communication_cost(
         "total_bytes": model_bytes * num_chains * 2,
     }
 
-    methods["PAGE-FGU"] = {
-        "comm_rounds": 1,
-        "models_per_round": num_chains,
-        "bytes_per_round": model_bytes * num_chains * 2,
-        "total_bytes": model_bytes * num_chains * 2,
-    }
-
     methods["CertRemoval"] = {
         "comm_rounds": 1,
         "models_per_round": num_chains,

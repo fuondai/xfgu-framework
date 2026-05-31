@@ -19,7 +19,6 @@ from baselines.retrain import full_retrain
 from baselines.sisa import sisa_unlearn
 from baselines.naive_finetune import naive_finetune_unlearn
 from baselines.graph_eraser import graph_eraser_unlearn
-from baselines.page_fgu import page_fgu_unlearn
 from baselines.certified_removal import certified_removal_unlearn
 from baselines.gnndelete import gnndelete_unlearn
 from baselines.erase_rectify import erase_rectify_unlearn
@@ -34,13 +33,13 @@ from evaluation.communication import analyze_communication_cost, print_communica
 
 
 ALL_METHODS = ["Original", "XFGU", "FullRetrain", "SISA",
-               "NaiveFT", "GraphEraser", "PAGE-FGU", "CertRemoval",
+               "NaiveFT", "GraphEraser", "CertRemoval",
                "GNNDelete", "EraseRectify", "PAGE"]
 UNLEARN_METHODS = ["XFGU", "SISA", "NaiveFT",
-                   "GraphEraser", "PAGE-FGU", "CertRemoval",
+                   "GraphEraser", "CertRemoval",
                    "GNNDelete", "EraseRectify", "PAGE"]
 TIMED_METHODS = ["XFGU", "FullRetrain", "SISA", "NaiveFT",
-                 "GraphEraser", "PAGE-FGU", "CertRemoval",
+                 "GraphEraser", "CertRemoval",
                  "GNNDelete", "EraseRectify", "PAGE"]
 
 
@@ -112,14 +111,6 @@ def run_single_seed(cfg, seed, output_dir):
     timing["GraphEraser"] = time.time() - t0
     print(f"     Done in {timing['GraphEraser']:.2f}s")
 
-    print("  -> PAGE-FGU baseline...")
-    t0 = time.time()
-    page_model = page_fgu_unlearn(
-        copy.deepcopy(trained_model), chains, forget_sets, cfg_copy
-    )
-    timing["PAGE-FGU"] = time.time() - t0
-    print(f"     Done in {timing['PAGE-FGU']:.2f}s")
-
     print("  -> Certified removal baseline...")
     t0 = time.time()
     cert_model, cert_radii = certified_removal_unlearn(
@@ -160,7 +151,6 @@ def run_single_seed(cfg, seed, output_dir):
         "SISA": sisa_model,
         "NaiveFT": naive_model,
         "GraphEraser": ge_model,
-        "PAGE-FGU": page_model,
         "CertRemoval": cert_model,
         "GNNDelete": gnndelete_model,
         "EraseRectify": erase_rectify_model,

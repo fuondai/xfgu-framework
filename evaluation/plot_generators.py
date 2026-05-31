@@ -29,7 +29,6 @@ def plot_main_results_table(results, output_dir):
         ("SISA", "SISA-Graph"),
         ("NaiveFT", "Naive Fine-tune"),
         ("GraphEraser", "GraphEraser"),
-        ("PAGE-FGU", "PAGE-FGU"),
         ("CertRemoval", "Certified Removal"),
     ]
 
@@ -327,8 +326,8 @@ def plot_architecture_comparison(gcn_results, gat_results, output_dir):
     if gcn_results is None or gat_results is None:
         return
 
-    methods = ["XFGU", "FullRetrain", "NaiveFT", "PAGE-FGU", "CertRemoval"]
-    labels = ["XFGU\n(Ours)", "FullRetrain", "NaiveFT", "PAGE-FGU", "CertRemoval"]
+    methods = ["XFGU", "FullRetrain", "NaiveFT", "PAGE", "CertRemoval"]
+    labels = ["XFGU\n(Ours)", "FullRetrain", "NaiveFT", "PAGE", "CertRemoval"]
     metrics = ["f1_mean", "acc_mean", "mia_mean"]
     metric_labels = ["F1-Score", "Accuracy", "MIA Accuracy"]
 
@@ -380,7 +379,7 @@ def plot_radar_chart(results, output_dir):
     agg = results.get("aggregated", {})
     timing = results.get("timing", {})
 
-    methods_to_plot = ["XFGU", "FullRetrain", "NaiveFT", "PAGE-FGU", "CertRemoval"]
+    methods_to_plot = ["XFGU", "FullRetrain", "NaiveFT", "PAGE", "CertRemoval"]
     colors = ["#2E7D32", "#1565C0", "#FF8F00", "#7B1FA2", "#D32F2F"]
     retrain_time = timing.get("FullRetrain", {}).get("mean", 1.0)
 
