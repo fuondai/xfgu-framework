@@ -1,0 +1,53 @@
+seed: 42
+device: cpu
+
+data:
+  archive_csv: "smartbug-scrawid-irfuzz.csv"            # SmartBugs export under archive/
+  num_chains: 5
+  chain_names: ["ETH", "BSC", "Polygon", "Avalanche", "Fantom"]
+  chain_sizes: [3123, 1740, 1124, 534, 326]             # Table II
+  chain_vuln_counts: [1284, 648, 412, 195, 107]         # Table II (per-chain vulnerable)
+  feature_dim: 64                                        # Definition 1
+  num_classes: 2
+  vuln_ratio: 0.386                                      # Table II (overall prevalence)
+  cross_chain_ratio: 0.048                               # Definition 1
+  cross_chain_threshold: 0.70                            # Definition 1
+  edge_similarity_threshold: 0.60                        # Definition 1
+  max_neighbors: 3                                       # Section V-A
+  train_ratio: 0.6                                       # Section V-A
+  val_ratio: 0.2
+  test_ratio: 0.2
+
+model:
+  arch: "GAT"
+  hidden_dim: 64
+  num_layers: 2
+  dropout: 0.3
+
+federated:
+  num_rounds: 60
+  local_epochs: 5
+  lr: 0.005
+  weight_decay: 0.0005
+  aggregation: "fedavg"
+
+unlearning:
+  forget_ratio: 0.05
+  l_hop: 2
+  reverse_lr: 0.003
+  reverse_steps: 8
+  finetune_lr: 0.003
+  finetune_steps: 20
+  dp_epsilon: 2.0
+  dp_delta: 1.0e-5
+  clip_norm: 1.0
+
+sisa:
+  num_shards: 5
+  retrain_epochs: 30
+  lr: 0.005
+
+evaluation:
+  mia_shadow_models: 3
+  mia_epochs: 30
+  seeds: [42, 123, 456, 789, 1024]

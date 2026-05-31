@@ -1,0 +1,88 @@
+seed: 42
+device: cpu
+
+data:
+  archive_csv: "smartbug-scrawid-irfuzz.csv"            # SmartBugs export under archive/
+  num_chains: 5
+  chain_names: ["ETH", "BSC", "Polygon", "Avalanche", "Fantom"]
+  chain_sizes: [3123, 1740, 1124, 534, 326]             # Table II
+  chain_vuln_counts: [1284, 648, 412, 195, 107]         # Table II (per-chain vulnerable)
+  feature_dim: 64                                        # Definition 1
+  num_classes: 2
+  vuln_ratio: 0.386                                      # Table II (overall prevalence)
+  cross_chain_ratio: 0.048                               # Definition 1
+  cross_chain_threshold: 0.70                            # Definition 1
+  edge_similarity_threshold: 0.60                        # Definition 1
+  max_neighbors: 3                                       # Section V-A
+  train_ratio: 0.6                                       # Section V-A
+  val_ratio: 0.2
+  test_ratio: 0.2
+
+model:
+  arch: "GCN"                                            # Section V-A
+  hidden_dim: 128                                        # Section V-A
+  num_layers: 2                                          # Section V-A
+  dropout: 0.3                                           # Section V-A
+
+federated:
+  num_rounds: 80                                         # Section V-A: T=80
+  local_epochs: 5                                        # Section V-A: E=5
+  lr: 0.005                                              # Section V-A: eta=5e-3
+  weight_decay: 0.0005                                   # Section V-A: 5e-4
+  aggregation: "fedavg"
+
+unlearning:
+  forget_ratio: 0.05                                     # Section V-A: 5%
+  l_hop: 2                                               # Section V-A: L=2
+  reverse_lr: 0.002                                      # Section V-A: eta_r=2e-3
+  reverse_steps: 5                                       # Section V-A: T_r=5
+  finetune_lr: 0.005                                     # Section V-A: eta_f=5e-3
+  finetune_steps: 15                                     # Section V-A: T_f=15
+  dp_epsilon: 2.0                                        # Section V-A: epsilon=2.0
+  dp_delta: 1.0e-5                                       # Section V-A: delta=10^{-5}
+  clip_norm: 1.0                                         # Section V-A: C=1.0
+
+sisa:
+  num_shards: 5                                          # Section V-A
+  retrain_epochs: 120                                    # Section V-A (increased for convergence)
+  lr: 0.005
+
+graph_eraser:
+  num_partitions: 5
+  retrain_epochs: 120
+  lr: 0.005
+
+certified_removal:
+  damping: 0.01                                          # Section V-A: lambda=0.01
+  scale: 1.0
+  noise_sigma: 0.0
+  cg_max_iter: 50
+  cg_tol: 1.0e-6
+
+page_fgu:
+  lr: 0.002
+  correction_steps: 10
+  momentum: 0.9
+
+gnndelete:
+  lr: 0.005
+  epochs: 15
+
+page:
+  lr: 0.005
+  distill_epochs: 10
+  adversarial_epochs: 5
+
+erase_rectify:
+  importance_threshold: 0.5
+  gradient_steps: 10
+  lr: 0.005
+
+naive_finetune:
+  steps: 15                                              # Section V-A: 15 steps
+
+evaluation:
+  mia_shadow_models: 5                                   # Section V-A footnote
+  mia_epochs: 50                                         # Section V-A footnote
+  mia_lr: 0.001                                          # Section V-A footnote
+  seeds: [42, 123, 456, 789, 1024]                       # Section V-A
